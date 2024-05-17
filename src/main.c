@@ -2,14 +2,13 @@
 //passeio
 
 int main(){
-    const char* filename="nums.txt";
+    char filename[8]="nums.txt";
     bool *r;
-    int *id=0;
-    graph* ini=criaGraph(filename,&r,&id,1,2);
+    graph* ini=criaGrafo(filename,10);
     printf("\nAdd vertice to graph\n");
-    addVertice(ini,&id,&r);
+    addVertice(ini,&r);
     printf("\nAdd destination to a vertice\n");
-    addAdj(ini,3,id,40,&r);
+    addAdj(ini,3,40,&r);
     /*
     *r==0 erro ao abrir ficheiro
     *r==-1 vertice erro
@@ -34,33 +33,40 @@ void printGraph(graph *ini){
     }
 }
 
-vertice* addVertice(graph* ini, int *id, bool *b){
+vertice* addVertice(graph* ini, bool *b){
     vertice* aux=NULL;
     vertice* ant=ini;
+    printf("\nteste1\n");
     aux=(vertice*)malloc(sizeof(vertice));
     if (aux==NULL){
         *b=false;
         return NULL;
     }
+    printf("\nteste2\n");
     aux->proxv=NULL;
+    printf("\nteste3\n");
     aux->ini=NULL;
-    aux->id=*id;
-    (*id)++;
+    printf("\nteste4\n");
+    aux->id=ini->id;
+    printf("\nteste5\n");
+    ini->id++;
+    printf("\nteste5.5\n");
     if(ini==NULL){
         ini->inicio=aux;
         *b=true;
         return aux;
     }
+    printf("\nteste6\n");
     while (ant->proxv!=NULL)ant=ant->proxv;
     if(ant!=NULL)ant->proxv=aux;
     *b=true;
     return aux;
 }
 
-bool addAdj(graph* inicio, int vertID, int adjID, int custo){
+bool addAdj(graph* inicio, int oriID, int destID, int custo){
     vertice* vert=inicio;
     adj* ant=NULL;
-    while(vert->id!=vertID){
+    while(vert->id!=oriID){
         if(vert->proxv!=NULL)vert=vert->proxv;
         else return false;
     }
@@ -68,7 +74,7 @@ bool addAdj(graph* inicio, int vertID, int adjID, int custo){
     if (aux==NULL)return false;
     aux->prox=NULL;
     aux->custo=custo;
-    aux->id=adjID;
+    aux->id=destID;
     if(vert->ini!=NULL)ant=vert->ini;
     else vert->ini=aux;
     while (ant->prox!=NULL)ant=ant->prox;
@@ -79,27 +85,21 @@ bool addAdj(graph* inicio, int vertID, int adjID, int custo){
 bool removeAdj(graph* inicio, int oriID, int destID){
     vertice* vert=inicio;
     adj* ant=NULL;
-    while(vert->id!=oriID){
-        if(vert->proxv!=NULL)vert=vert->proxv;
-        else
-        {
-            return false;
-        }
-    }
-    if(vert->ini!=NULL)ant=vert->ini;
-    else return false;
-    while(ant->prox->id!=adjID){
-        if(ant->prox!=NULL)ant=ant->prox;
-        else
-        {
-            return false;
-        }
-    }
-    adj* del=ant->prox;
     adj* aux=NULL;
-    if(del->prox!=NULL)aux=del->prox;
+    adj* cur=NULL;
+    while(vert->id!=oriID || vert!=NULL){
+        vert=vert->proxv;
+    }if(vert==NULL)return false;
+    if(vert->ini!=NULL)aux=vert->ini;
+    else return false;
+    while(aux->prox->id!=destID || aux!=NULL){
+        aux=aux->prox;
+    }if(aux==NULL)return false;
+    ant=aux;
+    cur=aux;
+    aux=aux->prox;
     ant->prox=aux;
-    free(del);
+    free(cur);
     return true;
 }
 
@@ -164,29 +164,6 @@ graph* removeVert(graph* graph, int id, int* e){
     return graph;
 }
 
-graph* criaGrafo(char* filename, bool *r, int *id, int method){
-    graph* ini;
-    switch (method)
-    {
-    case 1:
-        //line
-        break;
-    case 2:
-        //column
-        break;
-    case 3:
-        //full
-        ini=criaGrafoFull(ini,&id,filename);
-        break;
-    default:
-        *r=false;
-        return NULL;
-        break;
-    }
-    *r=true;
-    return ini;
-}
-
 graph* mLine(char* filename, int *id, int local){
     graph* ini=NULL;
     int num;
@@ -199,14 +176,14 @@ graph* mLine(char* filename, int *id, int local){
         fscanf(file, "%*[^\n]\n");
     }
     if(fscanf(file,"%d",num)!=1)return ini;
-    vertice* vert=addVertice(ini,&id,&r);
+    vertice* vert=addVertice(ini,&r);
     ini->inicio=vert;
     int custoIni=num;
     vertice* aux=NULL;
     while (fscanf(file,"%c%d",num,s)==2)
     {
         if(s=='\n')break;
-        aux=addVertice(ini,&id,&r);
+        aux=addVertice(ini,&r);
         vert->proxv=aux;
         addAdj(ini,vert->id,aux->id,num);
         vert=vert->proxv;
@@ -233,47 +210,61 @@ graph* mLine(char* filename, int *id, int local){
 
 #pragma criarGrafo
 
-graph* criaGrafoFull(graph* graph, int *id, char* filename){
-    FILE* file=fopen(filename,"r");
-    if(file==NULL)return NULL;
+graph* criaGrafo(const char* filename, int nTotalVert){
     int i=0;
     bool *b;
     adj* adj=NULL;
     vertice* v=NULL;
-    while (!eof(file))
+    FILE* file=fopen(filename,"r");
+    if(file==NULL)return NULL;
+    graph* grafo=(graph*)malloc(sizeof(graph));
+    if(grafo==NULL)return NULL;
+    grafo->id=0;
+    grafo->numTv=nTotalVert;
+    grafo->inicio=NULL;
+    while (!feof(file))
     {
         adj=lerFull(file);
         if(adj!=NULL){ //erro ao criar adj em ler()
-            v=addVertice(graph,&id,&b);
+            v=addVertice(grafo,&b);
+            printf("\nteste\n");
             v->ini=adj;
-            if(i==0)graph->inicio=v;i++;
+            if(i==0){
+                grafo->inicio=v;
+                i++;
+            }
         }
     }
-    verticeCheck(graph->inicio);
-    return graph;
+    verticeCheck(grafo->inicio);
+    return grafo;
 }
 
 adj* lerFull(FILE* file){
-    int num=NULL;
-    char c='.';
-    int i=0;
+    int num=0;
+    char c;
+    int i=1, verf=0;
     adj* aux=NULL;
     adj* ant=NULL;
     adj* ini=NULL;
-    while (c==';')
+    while (1)
     {
-        fscanf(file,"%d%c",num, c);
-        if(num!=-1 && num!=NULL){
+        num=-1;
+        fscanf(file,"%d%c",&num,&c);
+        if(num!=-1){
             aux=adjMalloc(num,i);
+            printf("\nteste3 %d %d\n",num, i);
             if(aux==NULL)return NULL;//erro ao criar adj
-            if(i==0)ini=aux;
+            if(i==1)ini=aux;
             else ant->prox=aux; 
             ant=aux;
-        }else if(num==NULL)i=-1;break;
-        num=NULL;
+        }
+        if(feof(file) || c=='\n'){
+            //printf("\ntesteMEGA %c1\n",c);
+            break;
+        }
         i++;
     }
-    if (i==-1)delAllAdj(ini);return NULL;
+    printf("\ntesteExit %d %d\n",ini->custo,ini->id);
     return ini;
 }
 
@@ -318,7 +309,7 @@ bool verticeCheck(graph* ini){
                 }
                 vaux=vaux->proxv;
             }
-            if(!found)addVertice(ini,aux->id,&b);
+            if(!found)addVertice(ini,&b);
             aux=aux->prox;
             found=false;
         }
