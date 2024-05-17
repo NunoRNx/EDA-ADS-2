@@ -2,7 +2,7 @@
 //passeio
 
 int main(){
-    char filename[8]="nums.txt";
+    const char* filename="nums.txt";
     bool *r;
     graph* ini=criaGrafo(filename,10);
     printf("\nAdd vertice to graph\n");
