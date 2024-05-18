@@ -6,9 +6,11 @@ int main(){
     bool *r;
     graph* ini=criaGrafo(filename,10);
     printf("\nAdd vertice to graph\n");
-    addVertice(ini,&r);
-    printf("\nAdd destination to a vertice\n");
-    addAdj(ini,3,40,&r);
+    addVertice(ini,ini->nVert,&r);
+    printf("\nAdd destination to a vertice\n"); 
+    addAdj(ini,3,40,23);
+    addAdj(ini,40,6,47);
+    printGraph(ini);
     /*
     *r==0 erro ao abrir ficheiro
     *r==-1 vertice erro
@@ -18,72 +20,80 @@ int main(){
 }
 
 void printGraph(graph *ini){
-    vertice* vert=ini;
+    vertice* vert=ini->inicio;
     adj* aux=NULL;
+    int i;
     while (vert!=NULL)
     {
+        i=0;
         aux=vert->ini;
-        printf("De %d \npara:\t",vert->id);
+        printf("\n\nOrigem: %d\n", vert->id);
         while (aux!=NULL)
         {
-            printf("id:%d custo:%d",aux->id,aux->custo);
+            printf("-> Destino: %d custo: %d\n",aux->id,aux->custo);
             aux=aux->prox;
+            i++;
         }
+        if(i==0)printf("-> Destino: Nenhum\n");
         vert=vert->proxv;
     }
+    printf("\nFim de grafo\n");
 }
 
-vertice* addVertice(graph* ini, bool *b){
+vertice* addVertice(graph* ini, int id, bool *b){
     vertice* aux=NULL;
-    vertice* ant=ini;
-    printf("\nteste1\n");
+    vertice* ant=ini->inicio;
     aux=(vertice*)malloc(sizeof(vertice));
     if (aux==NULL){
         *b=false;
         return NULL;
     }
-    printf("\nteste2\n");
     aux->proxv=NULL;
-    printf("\nteste3\n");
     aux->ini=NULL;
-    printf("\nteste4\n");
-    aux->id=ini->id;
-    printf("\nteste5\n");
-    ini->id++;
-    printf("\nteste5.5\n");
+    aux->id=id;
+    ini->nVert++;
     if(ini==NULL){
         ini->inicio=aux;
         *b=true;
         return aux;
     }
-    printf("\nteste6\n");
+    if (ini->inicio==NULL)
+    {
+        ini->inicio=aux;
+        *b=true;
+        return aux;
+    }
     while (ant->proxv!=NULL)ant=ant->proxv;
     if(ant!=NULL)ant->proxv=aux;
     *b=true;
     return aux;
 }
 
-bool addAdj(graph* inicio, int oriID, int destID, int custo){
-    vertice* vert=inicio;
+bool addAdj(graph* ini, int oriID, int destID, int custo){
+    vertice* vert=ini->inicio;
     adj* ant=NULL;
-    while(vert->id!=oriID){
-        if(vert->proxv!=NULL)vert=vert->proxv;
-        else return false;
-    }
+    while(vert!=NULL){
+        if(vert->id==oriID)break;
+        vert=vert->proxv;
+    }if(vert==NULL)return false;
     adj* aux=(adj*)malloc(sizeof(adj));
     if (aux==NULL)return false;
     aux->prox=NULL;
     aux->custo=custo;
     aux->id=destID;
-    if(vert->ini!=NULL)ant=vert->ini;
-    else vert->ini=aux;
-    while (ant->prox!=NULL)ant=ant->prox;
-    if(ant!=NULL)ant->prox=aux;
+    if(vert->ini==NULL){
+        vert->ini=aux;
+    }else{
+        ant=vert->ini;
+        while(ant->prox!=NULL)ant=ant->prox;
+        ant->prox=aux;
+    }
+    verticeCheck(ini);
     return true;
 }
 
-bool removeAdj(graph* inicio, int oriID, int destID){
-    vertice* vert=inicio;
+bool removeAdj(graph* ini, int oriID, int destID){
+    vertice* vert=ini->inicio;
     adj* ant=NULL;
     adj* aux=NULL;
     adj* cur=NULL;
@@ -135,7 +145,7 @@ graph* removeVert(graph* graph, int id, int* e){
     }
     //remover todas as adj com o ID indicado
     vert=graph->inicio;
-    adj* ante=NULL;
+    adj* prev=NULL;
     adj* aux=NULL;
     adj* atual=NULL;
     while (vert!=NULL)
@@ -150,11 +160,11 @@ graph* removeVert(graph* graph, int id, int* e){
                 free(atual);
             }
             if(aux->prox->id==id){
-                ante=aux;
+                prev=aux;
                 aux=aux->prox;
                 atual=aux;
                 aux=aux->prox;
-                ant->proxv=aux;
+                prev->prox=aux;
                 free(atual);
             }
         }
@@ -162,37 +172,6 @@ graph* removeVert(graph* graph, int id, int* e){
     }
     *e=0;
     return graph;
-}
-
-graph* mLine(char* filename, int *id, int local){
-    graph* ini=NULL;
-    int num;
-    char s;
-    bool r;
-    FILE* file=fopen(filename,"r");
-    if(file==NULL)return NULL;
-    for (int i = 0; i < local; i++)
-    {
-        fscanf(file, "%*[^\n]\n");
-    }
-    if(fscanf(file,"%d",num)!=1)return ini;
-    vertice* vert=addVertice(ini,&r);
-    ini->inicio=vert;
-    int custoIni=num;
-    vertice* aux=NULL;
-    while (fscanf(file,"%c%d",num,s)==2)
-    {
-        if(s=='\n')break;
-        aux=addVertice(ini,&r);
-        vert->proxv=aux;
-        addAdj(ini,vert->id,aux->id,num);
-        vert=vert->proxv;
-    }
-    vert=ini;
-    adj* aux2=vert->ini;
-    aux2->custo+=custoIni;
-    fclose(file);
-    return ini;
 }
 
 /* int saveFileToBin(a *ini,char *filename[]){
@@ -219,15 +198,14 @@ graph* criaGrafo(const char* filename, int nTotalVert){
     if(file==NULL)return NULL;
     graph* grafo=(graph*)malloc(sizeof(graph));
     if(grafo==NULL)return NULL;
-    grafo->id=0;
+    grafo->nVert=1;
     grafo->numTv=nTotalVert;
     grafo->inicio=NULL;
     while (!feof(file))
     {
         adj=lerFull(file);
         if(adj!=NULL){ //erro ao criar adj em ler()
-            v=addVertice(grafo,&b);
-            printf("\nteste\n");
+            v=addVertice(grafo,grafo->nVert,&b);
             v->ini=adj;
             if(i==0){
                 grafo->inicio=v;
@@ -235,7 +213,7 @@ graph* criaGrafo(const char* filename, int nTotalVert){
             }
         }
     }
-    verticeCheck(grafo->inicio);
+    verticeCheck(grafo);
     return grafo;
 }
 
@@ -252,19 +230,16 @@ adj* lerFull(FILE* file){
         fscanf(file,"%d%c",&num,&c);
         if(num!=-1){
             aux=adjMalloc(num,i);
-            printf("\nteste3 %d %d\n",num, i);
             if(aux==NULL)return NULL;//erro ao criar adj
             if(i==1)ini=aux;
             else ant->prox=aux; 
             ant=aux;
         }
         if(feof(file) || c=='\n'){
-            //printf("\ntesteMEGA %c1\n",c);
             break;
         }
         i++;
     }
-    printf("\ntesteExit %d %d\n",ini->custo,ini->id);
     return ini;
 }
 
@@ -309,7 +284,7 @@ bool verticeCheck(graph* ini){
                 }
                 vaux=vaux->proxv;
             }
-            if(!found)addVertice(ini,&b);
+            if(!found)addVertice(ini,aux->id,&b);
             aux=aux->prox;
             found=false;
         }
