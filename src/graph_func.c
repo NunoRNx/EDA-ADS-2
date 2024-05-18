@@ -211,7 +211,6 @@ void printGraph(graph *ini){
         if(i==0)printf("-> Destino: Nenhum\n");
         vert=vert->proxv;
     }
-    printf("\nFim de grafo\n");
 }
 
 #pragma endregion
