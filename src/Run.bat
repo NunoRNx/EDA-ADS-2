@@ -11,7 +11,7 @@ gcc -w -o output\main.exe output\main.o -Loutput -lgraph -lgraph_func
 
 cd output
 
-cls
+
 
 main.exe
 

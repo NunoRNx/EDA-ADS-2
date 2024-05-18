@@ -11,6 +11,8 @@ int main(){
     addAdj(ini,3,40,23);
     addAdj(ini,40,6,47);
     printGraph(ini);
+    saveGraphToBin(ini,"export.bin");
+    loadBinGraph(ini,"export.bin");
     /*
     *r==0 erro ao abrir ficheiro
     *r==-1 vertice erro

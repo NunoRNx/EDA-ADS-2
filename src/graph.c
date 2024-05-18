@@ -27,6 +27,7 @@ graph* criaGrafo(const char* filename, int nTotalVert){
         }
     }
     verticeCheck(grafo);
+    fclose(file);
     return grafo;
 }
 
@@ -60,20 +61,40 @@ adj* lerFull(FILE* file){
 
 #pragma region Export (bin)
 
-/* int saveFileToBin(a *ini,char *filename[]){
-    a *aux=ini;
+int saveGraphToBin(graph *ini,const char *filename){
+    vertice *aux=ini->inicio;
     FILE* file=fopen(filename,"wb");
     if (file==NULL)return 1;    
-    while (aux!=NULL)
+    /* while (aux!=NULL)
     {
-        fwrite(aux,sizeof(a),1,file);
-        aux=aux->prox;
-    }
+        fwrite(aux,sizeof(vertice),1,file);
+        aux=aux->proxv;
+    } */
+    fwrite(aux,sizeof(vertice),1,file);
+    aux=aux->proxv;
+    fwrite(aux->ini,sizeof(adj),1,file);
+    aux=aux->proxv;
+    fclose(file);
     return 0;
-} */
+}
 
 #pragma endregion
 
 #pragma region Import (bin)
+
+int loadBinGraph(graph *ini,const char *filename){
+    vertice *aux=(vertice*)malloc(sizeof(vertice));
+    FILE* file=fopen(filename,"rb");
+    if (file==NULL)return 1;    
+    /* while (aux!=NULL)
+    {
+        fwrite(aux,sizeof(vertice),1,file);
+        aux=aux->proxv;
+    } */
+    fread(aux,sizeof(vertice),1,file);
+    printf("teste import %d",aux->ini->custo);
+    fclose(file);
+    return 0;
+}
 
 #pragma endregion

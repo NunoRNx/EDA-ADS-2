@@ -33,3 +33,6 @@ adj* lerFull(FILE* file);
 adj* adjMalloc(int custo, int id);
 bool delAllAdj(adj* ini);
 bool verticeCheck(graph* ini);
+
+int saveGraphToBin(graph *ini,const char *filename);
+int loadBinGraph(graph *ini,const char *filename);
