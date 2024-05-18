@@ -30,6 +30,6 @@ bool removeAdj(graph* ini, int oriID, int destID);
 graph* removeVert(graph* graph, int id, int* e);
 graph* criaGrafo(const char* filename, int nTotalVert);
 adj* lerFull(FILE* file);
-adj* adjMalloc(int num, int id);
+adj* adjMalloc(int custo, int id);
 bool delAllAdj(adj* ini);
 bool verticeCheck(graph* ini);
