@@ -13,6 +13,7 @@ vertice* addVertice(graph* ini, int id, bool *b){
     aux->proxv=NULL;
     aux->ini=NULL;
     aux->id=id;
+    aux->visited=false;
     ini->nVert++;
     if(ini==NULL){
         ini->inicio=aux;

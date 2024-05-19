@@ -2,7 +2,7 @@
 
 #pragma region criarGrafo (Txt/Csv)
 
-graph* criaGrafo(const char* filename, int nTotalVert){
+graph* criaGrafo(const char* filename){
     int i=0;
     bool *b;
     adj* adj=NULL;
@@ -12,7 +12,6 @@ graph* criaGrafo(const char* filename, int nTotalVert){
     graph* grafo=(graph*)malloc(sizeof(graph));
     if(grafo==NULL)return NULL;
     grafo->nVert=1;
-    grafo->numTv=nTotalVert;
     grafo->inicio=NULL;
     while (!feof(file))
     {
@@ -92,7 +91,6 @@ int loadBinGraph(graph *ini,const char *filename){
         aux=aux->proxv;
     } */
     fread(aux,sizeof(vertice),1,file);
-    printf("teste import %d",aux->ini->custo);
     fclose(file);
     return 0;
 }
