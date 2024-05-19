@@ -13,7 +13,6 @@ typedef struct adj {
 }adj;
 typedef struct vertice {
     int id;//char* nome;
-    bool visited;
     struct vertice *proxv;
     struct adj *ini;
 }vertice;
@@ -39,7 +38,6 @@ int saveGraphToBin(graph *ini,const char *filename);
 int loadBinGraph(graph *ini,const char *filename);
 
 int DFS(graph *ini, vertice* vert, int destID, int custo, int stack[], int highPath[], int stackSize, bool high, int* maior, int* sizeHighPath);
-bool resetVisited(graph* ini);
 void printPath(int stack[], int i);
 bool existeVert(graph* ini, int id);
 bool checkStack(int v, int stack[], int stackSize);

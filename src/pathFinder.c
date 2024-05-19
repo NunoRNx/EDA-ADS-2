@@ -1,68 +1,5 @@
 #include "header.h"
 
-/* bool DFS(graph* ini, int oriID, int destID){
-
-
-    int stack[numTv];
-    int high[numTv];
-    int cust[numTv];
-    int i=0, paths=0;
-    vertice* vert=ini->inicio;
-    vertice* vaux=NULL;
-    adj* aux=NULL;
-    aux=vert->ini;
-    //verificar se existe Origem e Destino
-    if(existeVert(ini,oriID)==false || existeVert(ini,destID)==false)return false;
-    //vertice origem
-    while(vert->id!=oriID)vert=vert->proxv;
-    vert->visited=true;
-    stack[i]=vert->id;
-    cust[i]=0;
-    i++;
-    aux=vert->ini;
-
-    while(i!=1 && paths==0){
-        while(aux!=NULL){
-            vaux=ini->inicio;
-            while (vaux->id!=aux->id)
-            {
-                vaux=vaux->proxv;
-            }
-            if(vaux->visited==false){
-                stack[i]=vaux->id;
-                cust[i]=aux->custo;
-                i++;
-                vaux->visited=true;
-                aux=vaux->ini;
-            }else{
-                aux=aux->prox;
-            }
-            if(vaux->id==destID)break;
-        }
-        if(vert->id==destID){
-            printPath(stack, i);
-            paths++;
-            vert->visited=false;
-        }
-        i--;
-        vaux=ini->inicio;
-        while(vaux->id!=stack[i])vaux=vaux->proxv;
-        aux=vaux->ini;
-    }
-    resetVisited(ini);
-    return true;
-} */
-
-bool resetVisited(graph* ini){
-    if(ini==NULL)return false;
-    vertice* aux=ini->inicio;
-    while(aux!=NULL){
-        aux->visited=false;
-        aux=aux->proxv;
-    }
-    return true;
-}
-
 void printPath(int stack[], int i){
     for (int x=0; x < i-1; x++)
     {
@@ -119,7 +56,7 @@ int DFS(graph* gini, vertice* vert, int destID, int custo, int stack[], int high
     //printf("\nteste2 vert: %d\n",v->ini->id);
     //stackSize--;
     //printf("\ntesteAcabou maior: %d\n", *maior);
-    return 0;
+    return *maior;
 }
 
 bool checkStack(int v, int stack[], int stackSize){

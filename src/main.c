@@ -7,7 +7,7 @@ int main(){
     bool *r;
     int stack[numTv];
     int highPath[numTv];
-    int *maior=0, *sizeHighPath=0;
+    int maior=0, sizeHighPath=0;
     graph* ini=criaGrafo(filename);
     printf("\nAdd vertice to graph\n");
     addVertice(ini,ini->nVert,&r);
@@ -16,8 +16,9 @@ int main(){
     addAdj(ini,40,6,47);
     printGraph(ini);
     //DFS(ini, ini->inicio,6,0,stack,highPath,0,false,&maior,&sizeHighPath);
-    DFS(ini, ini->inicio,6,0,stack,highPath,0,false,maior,sizeHighPath);
-    //printf("teste2 custo: %d\n", i);
+    int i=DFS(ini, ini->inicio,6,0,stack,highPath,0,true,&maior,&sizeHighPath);
+    printf("teste custo: %d\n", maior);
+    printf("teste2 custo: %d\n", i);
     //printPath(highPath,sizeHighPath);
     //printf("\nCusto: %d",*maior);
     /* saveGraphToBin(ini,"export.bin");
