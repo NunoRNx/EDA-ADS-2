@@ -1,5 +1,7 @@
 #include "header.h"
 
+#pragma region DFS stack Estatico
+/* 
 int DFS(graph* gini, int oriID, int destID, bool cost){
     int stack[numTv];
     int highPath[numTv];
@@ -79,4 +81,139 @@ void printPath(int stack[], int i){
         printf("%d->",stack[x]);
     }
     printf("%d\n",stack[i-1]);
+}*/
+#pragma endregion
+
+#pragma region DFS stack Dinamico
+
+int DFS(graph* gini, int oriID, int destID, bool cost) {
+    int maior = 0;
+    stacks* stack = NULL;
+    stacks* highPath = NULL;
+    
+    if (!existeVert(gini, oriID) || !existeVert(gini, destID)) {
+        return -1;
+    }
+
+    vertice* vert = gini->inicio;
+    while (vert->id != oriID) {
+        vert = vert->proxv;
+    }
+
+    if (cost) {
+        DFSrecursive(gini, vert, destID, 0, stack, &highPath, true, &maior);
+        printf("\n\nHighest Value Path:");
+        printPath(highPath);
+        clearPath(highPath);
+        return maior;
+    } else {
+        DFSrecursive(gini, vert, destID, 0, stack, &highPath, false, &maior);
+        return 0;
+    }
 }
+
+int DFSrecursive(graph* gini, vertice* vert, int destID, int custo, stacks* stack, stacks** highPath, bool high, int* maior) {
+    stack = push(stack, vert->id);
+    if (vert->id == destID) {
+        if (!high) {
+            printPath(stack);
+        } else if (custo > *maior || *maior == 0) {
+            *maior = custo;
+            clearPath(*highPath);
+            *highPath = copyPath(stack);
+        }
+    } else {
+        adj* aux = vert->ini;
+        while (aux != NULL) {
+            if (checkStack(aux->id, stack)) {
+                vertice* v = gini->inicio;
+                while (v->id != aux->id) {
+                    v = v->proxv;
+                }
+                DFSrecursive(gini, v, destID, custo + aux->custo, stack, highPath, high, maior);
+            }
+            aux = aux->prox;
+        }
+    }
+    stack = pop(stack);
+    return *maior;
+}
+bool checkStack(int v, stacks* stack) {
+    stacks* aux = stack;
+    while (aux != NULL) {
+        if (aux->id == v) {
+            return false;
+        }
+        aux = aux->next;
+    }
+    return true;
+}
+
+void printPath(stacks* stack) {
+    if (stack == NULL) {
+        return;
+    }
+    printPath(stack->next);
+    if (stack->next != NULL) {
+        printf("->%d", stack->id);
+    } else {
+        printf("\n%d", stack->id);
+    }
+}
+
+stacks* push(stacks* stack, int id) {
+    stacks* aux = (stacks*)malloc(sizeof(stacks));
+    if (aux == NULL) {
+        return NULL;
+    }
+    aux->id = id;
+    aux->next = stack;
+    return aux;
+}
+
+stacks* pop(stacks* stack) {
+    if (stack == NULL) {
+        return NULL;
+    }
+    stacks* temp = stack;
+    stack = stack->next;
+    free(temp);
+    return stack;
+}
+
+stacks* copyPath(stacks* src) {
+    if (src == NULL) {
+        return NULL;
+    }
+    stacks* copied = NULL;
+    stacks* current = NULL;
+    while (src != NULL) {
+        stacks* new_node = (stacks*)malloc(sizeof(stacks));
+        if (new_node == NULL) {
+            printf("Memory allocation failed\n");
+            exit(1);
+        }
+        new_node->id = src->id;
+        new_node->next = NULL;
+        if (copied == NULL) {
+            copied = new_node;
+            current = copied;
+        } else {
+            current->next = new_node;
+            current = current->next;
+        }
+        src = src->next;
+    }
+    return copied;
+}
+
+void clearPath(stacks* stack) {
+    stacks* aux = stack;
+    while (aux != NULL) {
+        stacks* temp = aux;
+        aux = aux->next;
+        free(temp);
+    }
+}
+
+#pragma end region

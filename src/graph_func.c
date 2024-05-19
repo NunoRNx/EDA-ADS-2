@@ -15,14 +15,8 @@ vertice* addVertice(graph* ini, int id, bool *b){
     aux->ini=NULL;
     aux->id=id;
     ini->nVert++;
-    if(ini==NULL){
-        ini->inicio=aux;
-        *b=true;
-        return aux;
-    }
     if (ini->inicio==NULL)
     {
-        ini->inicio=aux;
         *b=true;
         return aux;
     }
@@ -190,12 +184,13 @@ bool verticeCheck(graph* ini){
 }
 
 bool existeVert(graph* ini, int id){
+    if(ini->inicio==NULL)return false;
     vertice* vert=ini->inicio;
-    while(vert->id!=id && vert!=NULL){
+    while(vert!=NULL){
+        if(vert->id==id)return true;
         vert=vert->proxv;
     }
-    if(vert==NULL)return false;
-    return true;
+    return false;
 }
 
 void printGraph(graph *ini){

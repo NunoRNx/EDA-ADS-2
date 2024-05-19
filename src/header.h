@@ -4,7 +4,6 @@
 #include <string.h>
 #include <malloc.h>
 #include <stdbool.h>
-#define numTv 10
 
 typedef struct adj {
     int id;//char* nome;
@@ -20,6 +19,10 @@ typedef struct graph {
     struct vertice *inicio;
     int nVert;
 }graph;
+typedef struct stacks {
+    int id;
+    struct stacks *next;
+}stacks;
 
 #pragma funcoes
 
@@ -33,12 +36,22 @@ adj* readAllAdj(FILE* file);
 adj* adjMalloc(int custo, int id);
 bool delAllAdj(adj* ini);
 bool verticeCheck(graph* ini);
+bool existeVert(graph* ini, int id);
+//int saveGraphToBin(graph *ini,const char *filename);
+//int loadBinGraph(graph *ini,const char *filename);
 
-int saveGraphToBin(graph *ini,const char *filename);
-int loadBinGraph(graph *ini,const char *filename);
-
+/*
 int DFS(graph* gini, int oriID, int destID, bool cost);
 int DFSrecursive(graph *ini, vertice* vert, int destID, int custo, int stack[], int highPath[], int stackSize, bool high, int* maior, int* sizeHighPath);
 void printPath(int stack[], int i);
-bool existeVert(graph* ini, int id);
 bool checkStack(int v, int stack[], int stackSize);
+*/
+
+int DFS(graph* gini, int oriID, int destID, bool cost);
+int DFSrecursive(graph* gini, vertice* vert, int destID, int custo, stacks* stack, stacks** highPath, bool high, int* maior);
+bool checkStack(int v, stacks* stack);
+void printPath(stacks* stack);
+stacks* push(stacks* stack, int id);
+stacks* pop(stacks* stack);
+stacks* copyPath(stacks* src);
+void clearPath(stacks* stack);

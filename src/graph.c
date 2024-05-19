@@ -13,18 +13,28 @@ graph* criaGrafo(const char* filename){
     if(grafo==NULL)return NULL;
     grafo->nVert=1;
     grafo->inicio=NULL;
+    printf("\nteste1.5");
     while (!feof(file))
     {
+        printf("\nteste2.5");
         adj=readAllAdj(file);
-        if(adj!=NULL){ //erro ao criar adj em ler()
+        printf("\nteste3.5");
+        if(adj==NULL)printf("\nteste erro");
+        else{ //erro ao criar adj em ler()
+            printf("\nteste4.5");
             v=addVertice(grafo,grafo->nVert,&b);
+            if(v==NULL)printf("\nteste erro2");
+ printf("\nteste5.5");
             v->ini=adj;
+           
             if(i==0){
                 grafo->inicio=v;
                 i++;
             }
         }
+        printf("\nteste6.5");
     }
+    printf("\nteste7.5");
     verticeCheck(grafo);
     fclose(file);
     return grafo;
@@ -60,7 +70,7 @@ adj* readAllAdj(FILE* file){
 
 #pragma region Export (bin)
 
-int saveGraphToBin(graph *ini,const char *filename){
+/* int saveGraphToBin(graph *ini,const char *filename){
     vertice *aux=ini->inicio;
     FILE* file=fopen(filename,"wb");
     if (file==NULL)return 1;    
@@ -68,20 +78,20 @@ int saveGraphToBin(graph *ini,const char *filename){
     {
         fwrite(aux,sizeof(vertice),1,file);
         aux=aux->proxv;
-    } */
+    }
     fwrite(aux,sizeof(vertice),1,file);
     aux=aux->proxv;
     fwrite(aux->ini,sizeof(adj),1,file);
     aux=aux->proxv;
     fclose(file);
     return 0;
-}
+} */
 
 #pragma endregion
 
 #pragma region Import (bin)
 
-int loadBinGraph(graph *ini,const char *filename){
+/* int loadBinGraph(graph *ini,const char *filename){
     adj* adj=NULL;
     int i=0;
     //criar
@@ -108,6 +118,6 @@ int loadBinGraph(graph *ini,const char *filename){
     }
     fclose(file);
     return 0;
-}
+} */
 
 #pragma endregion
