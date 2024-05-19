@@ -29,7 +29,7 @@ bool addAdj(graph* ini, int oriID, int destID, int custo);
 bool removeAdj(graph* ini, int oriID, int destID);
 graph* removeVert(graph* graph, int id, int* e);
 graph* criaGrafo(const char* filename);
-adj* lerFull(FILE* file);
+adj* readAllAdj(FILE* file);
 adj* adjMalloc(int custo, int id);
 bool delAllAdj(adj* ini);
 bool verticeCheck(graph* ini);
@@ -37,7 +37,8 @@ bool verticeCheck(graph* ini);
 int saveGraphToBin(graph *ini,const char *filename);
 int loadBinGraph(graph *ini,const char *filename);
 
-int DFS(graph *ini, vertice* vert, int destID, int custo, int stack[], int highPath[], int stackSize, bool high, int* maior, int* sizeHighPath);
+int DFS(graph* gini, int oriID, int destID, bool cost);
+int DFSrecursive(graph *ini, vertice* vert, int destID, int custo, int stack[], int highPath[], int stackSize, bool high, int* maior, int* sizeHighPath);
 void printPath(int stack[], int i);
 bool existeVert(graph* ini, int id);
 bool checkStack(int v, int stack[], int stackSize);

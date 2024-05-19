@@ -5,6 +5,7 @@
 vertice* addVertice(graph* ini, int id, bool *b){
     vertice* aux=NULL;
     vertice* ant=ini->inicio;
+    if(existeVert(ini,id)==true)return NULL;
     aux=(vertice*)malloc(sizeof(vertice));
     if (aux==NULL){
         *b=false;
@@ -38,11 +39,7 @@ bool addAdj(graph* ini, int oriID, int destID, int custo){
         if(vert->id==oriID)break;
         vert=vert->proxv;
     }if(vert==NULL)return false;
-    adj* aux=(adj*)malloc(sizeof(adj));
-    if (aux==NULL)return false;
-    aux->prox=NULL;
-    aux->custo=custo;
-    aux->id=destID;
+    adj* aux=adjMalloc(custo,destID);
     if(vert->ini==NULL){
         vert->ini=aux;
     }else{
@@ -192,6 +189,14 @@ bool verticeCheck(graph* ini){
     return true;
 }
 
+bool existeVert(graph* ini, int id){
+    vertice* vert=ini->inicio;
+    while(vert->id!=id && vert!=NULL){
+        vert=vert->proxv;
+    }
+    if(vert==NULL)return false;
+    return true;
+}
 
 void printGraph(graph *ini){
     vertice* vert=ini->inicio;

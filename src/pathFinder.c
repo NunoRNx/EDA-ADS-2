@@ -1,23 +1,23 @@
 #include "header.h"
 
-void printPath(int stack[], int i){
-    for (int x=0; x < i-1; x++)
-    {
-        printf("%d->",stack[x]);
+int DFS(graph* gini, int oriID, int destID, bool cost){
+    int stack[numTv];
+    int highPath[numTv];
+    int maior=0, sizeHighPath=0;
+    if(existeVert(gini,oriID)==false || existeVert(gini,destID)==false)return NULL;
+    vertice* vert=gini->inicio;
+    while(vert->id!=oriID)vert=vert->proxv;
+    if(cost==true){
+        DFSrecursive(gini,vert,destID,0,stack,highPath,0,true,&maior,&sizeHighPath);
+        printf("\n\nHighest Value Path:");
+        printPath(highPath,sizeHighPath);
+        return maior;
     }
-    printf("%d\n",stack[i-1]);
+    DFSrecursive(gini,vert,destID,0,stack,highPath,0,false,&maior,&sizeHighPath);
+    return 0;
 }
 
-bool existeVert(graph* ini, int id){
-    vertice* vert=ini->inicio;
-    while(vert->id!=id || vert!=NULL){
-        vert=vert->proxv;
-    }
-    if(vert==NULL)return false;
-    return true;
-}
-
-int DFS(graph* gini, vertice* vert, int destID, int custo, int stack[], int highPath[], int stackSize, bool high, int* maior, int* sizeHighPath){
+int DFSrecursive(graph* gini, vertice* vert, int destID, int custo, int stack[], int highPath[], int stackSize, bool high, int* maior, int* sizeHighPath){
     int x=0;
     vertice* v=vert;
     
@@ -45,8 +45,8 @@ int DFS(graph* gini, vertice* vert, int destID, int custo, int stack[], int high
                 v=gini->inicio;
                 while(v->id!=aux->id)v=v->proxv;
                 //printf("\nteste vAtual %d pVert %d\n", vert->id, v->id);
-                printf("\nteste custo %d + adj %d", custo, aux->custo);
-                DFS(gini,v,destID,custo+aux->custo,stack,highPath,stackSize,high,maior,sizeHighPath);
+                //printf("\nteste custo %d + adj %d", custo, aux->custo);
+                DFSrecursive(gini,v,destID,custo+aux->custo,stack,highPath,stackSize,high,maior,sizeHighPath);
                 //printf("\nteste 5: %d %d\n", v->id, custo);
             }
             //printf("\nteste4.5");
@@ -66,11 +66,17 @@ bool checkStack(int v, int stack[], int stackSize){
     }
     return true;
 }
-
+//debugg
 void stackprint(int stack[], int stackSize){
     for (int i = 0; i < stackSize; i++)
     {
         printf("\nstack:%d", stack[i]);
     }
-    
+}
+void printPath(int stack[], int i){
+    for (int x=0; x < i-1; x++)
+    {
+        printf("%d->",stack[x]);
+    }
+    printf("%d\n",stack[i-1]);
 }

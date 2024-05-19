@@ -15,7 +15,7 @@ graph* criaGrafo(const char* filename){
     grafo->inicio=NULL;
     while (!feof(file))
     {
-        adj=lerFull(file);
+        adj=readAllAdj(file);
         if(adj!=NULL){ //erro ao criar adj em ler()
             v=addVertice(grafo,grafo->nVert,&b);
             v->ini=adj;
@@ -30,7 +30,7 @@ graph* criaGrafo(const char* filename){
     return grafo;
 }
 
-adj* lerFull(FILE* file){
+adj* readAllAdj(FILE* file){
     int num=0;
     char c;
     int i=1, verf=0;
@@ -82,15 +82,30 @@ int saveGraphToBin(graph *ini,const char *filename){
 #pragma region Import (bin)
 
 int loadBinGraph(graph *ini,const char *filename){
-    vertice *aux=(vertice*)malloc(sizeof(vertice));
+    adj* adj=NULL;
+    int i=0;
+    //criar
+    vertice *v=(vertice*)malloc(sizeof(vertice));
+    if (v==NULL)return -1; 
     FILE* file=fopen(filename,"rb");
-    if (file==NULL)return 1;    
-    /* while (aux!=NULL)
+    if (file==NULL)return -2;    
+    graph* grafo=(graph*)malloc(sizeof(graph));
+    if(grafo==NULL)return -3;
+    grafo->nVert=1;
+    grafo->inicio=NULL;
+
+    while (!feof(file))
     {
-        fwrite(aux,sizeof(vertice),1,file);
-        aux=aux->proxv;
-    } */
-    fread(aux,sizeof(vertice),1,file);
+        adj=readAllAdjBin(file);
+        if(adj!=NULL){ //erro ao criar adj em ler()
+            fread(v,sizeof(vertice),1,file);
+            v->ini=adj;
+            if(i==0){
+                grafo->inicio=v;
+                i++;
+            }
+        }
+    }
     fclose(file);
     return 0;
 }
