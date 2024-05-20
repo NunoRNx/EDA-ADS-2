@@ -13,8 +13,9 @@ int main(){
     addAdj(ini,40,6,47);
     printGraph(ini);
     //DFS(ini, ini->inicio,6,0,stack,highPath,0,false,&maior,&sizeHighPath);
-    int custo=DFS(ini,1,6,true);
-    printf("\nCaminho de maior custo entre 1 e 6: %d\n",custo);
+    DFS(ini,1,5,false);
+    int custo=DFS(ini,1,5,true);
+    printf("\nCaminho de maior custo entre 1 e 5: %d\n",custo);
     //printPath(highPath,sizeHighPath);
     //printf("\nCusto: %d",*maior);
     /* saveGraphToBin(ini,"export.bin");
