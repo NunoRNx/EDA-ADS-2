@@ -1,9 +1,30 @@
+/**
+ * @file header.h
+ * @author Nuno Silva (a28005@alunos.ipca.pt)
+ * @brief Ficheiro de organização com as bibliotecas, estruturas e declaração de funções utilizadas
+ * @version 0.1
+ * @date 2024-05-18
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #pragma once
+
+/**
+ * @brief 
+ * Bibliotecas utilizadas
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include <malloc.h>
 #include <stdbool.h>
+
+/**
+ * @brief 
+ * Declaração das estruturas
+ */
 
 typedef struct adj {
     int id;//char* nome;
@@ -26,6 +47,11 @@ typedef struct stacks {
 
 #pragma funcoes
 
+/**
+ * @brief 
+ * Declaração de todas as funções
+ */
+
 void printGraph(graph *ini);
 vertice* addVertice(graph* ini, int id, bool *b);
 bool addAdj(graph* ini, int oriID, int destID, int custo);
@@ -40,7 +66,7 @@ bool existeVert(graph* ini, int id);
 //int saveGraphToBin(graph *ini,const char *filename);
 //int loadBinGraph(graph *ini,const char *filename);
 
-/*
+/*DFS com stack estático
 int DFS(graph* gini, int oriID, int destID, bool cost);
 int DFSrecursive(graph *ini, vertice* vert, int destID, int custo, int stack[], int highPath[], int stackSize, bool high, int* maior, int* sizeHighPath);
 void printPath(int stack[], int i);

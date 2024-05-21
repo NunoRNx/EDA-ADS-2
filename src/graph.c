@@ -1,3 +1,14 @@
+/**
+ * @file graph.c
+ * @author Nuno Silva (a28005@alunos.ipca.pt)
+ * @brief Ficheiro com processo de criação/exportação e importação do grafo
+ * @version 0.1
+ * @date 2024-05-18
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #include "header.h"
 
 #pragma region criarGrafo (Txt/Csv)
@@ -13,28 +24,20 @@ graph* criaGrafo(const char* filename){
     if(grafo==NULL)return NULL;
     grafo->nVert=1;
     grafo->inicio=NULL;
-    printf("\nteste1.5");
     while (!feof(file))
     {
-        printf("\nteste2.5");
         adj=readAllAdj(file);
-        printf("\nteste3.5");
-        if(adj==NULL)printf("\nteste erro");
-        else{ //erro ao criar adj em ler()
-            printf("\nteste4.5");
+        if(adj!=NULL){
             v=addVertice(grafo,grafo->nVert,&b);
-            if(v==NULL)printf("\nteste erro2");
- printf("\nteste5.5");
-            v->ini=adj;
-           
-            if(i==0){
-                grafo->inicio=v;
-                i++;
+            if(v!=NULL){
+                v->ini=adj;
+                if(i==0){
+                    grafo->inicio=v;
+                    i++;
+                }
             }
         }
-        printf("\nteste6.5");
     }
-    printf("\nteste7.5");
     verticeCheck(grafo);
     fclose(file);
     return grafo;

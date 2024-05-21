@@ -1,3 +1,14 @@
+/**
+ * @file pathFinder.c
+ * @author Nuno Silva (a28005@alunos.ipca.pt)
+ * @brief Ficheiro com o algoritmo DFT/DFS com opção de calcular o caminho de maior custo
+ * @version 0.1
+ * @date 2024-05-21
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #include "header.h"
 
 #pragma region DFS stack Estatico
@@ -86,6 +97,16 @@ void printPath(int stack[], int i){
 
 #pragma region DFS stack Dinamico
 
+/**
+ * @brief 
+ * 
+ * @param gini Inicio do grafo
+ * @param oriID ID origem
+ * @param destID ID destino
+ * @param cost booleano que indica se o utilizador o caminho de maior custo e o respetivo custo ou se quer apenas todos os caminhos de ID origem a ID destino
+ * @return retorna o custo do caminho de maior custo entre origem e destino
+ */
+
 int DFS(graph* gini, int oriID, int destID, bool cost) {
     int maior = 0;
     stacks* stack = NULL;
@@ -102,15 +123,29 @@ int DFS(graph* gini, int oriID, int destID, bool cost) {
 
     if (cost) {
         DFSrecursive(gini, vert, destID, 0, stack, &highPath, true, &maior);
-        printf("\n\nHighest Value Path:");
         printPath(highPath);
         clearPath(highPath);
         return maior;
     } else {
         DFSrecursive(gini, vert, destID, 0, stack, &highPath, false, &maior);
+        clearPath(stack);
         return 0;
     }
 }
+
+/**
+ * @brief 
+ * 
+ * @param gini Inicio do grafo
+ * @param vert vertice origem
+ * @param destID ID destino
+ * @param custo inteiro que guardar o valor de um caminho até ao ponto atual
+ * @param stack lista que guarda o caminho
+ * @param highPath guarda o caminho de maior custo
+ * @param high determina se vai ser calcular o caminho de maior custo ou vão ser mostrados todos os caminhos do ID origem ao ID destino
+ * @param maior guarda o valor do caminho de maior custo
+ * @return retorna o custo do caminho de maior custo entre origem e destino, se o mesmo não for calculado retorna 0
+ */
 
 int DFSrecursive(graph* gini, vertice* vert, int destID, int custo, stacks* stack, stacks** highPath, bool high, int* maior) {
     stack = push(stack, vert->id);
@@ -216,4 +251,4 @@ void clearPath(stacks* stack) {
     }
 }
 
-#pragma end region
+#pragma endregion

@@ -1,3 +1,14 @@
+/**
+ * @file graph_func.c
+ * @author Nuno Silva (a28005@alunos.ipca.pt)
+ * @brief Ficheiro com diversas operações no grafo
+ * @version 0.1
+ * @date 2024-05-18
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #include "header.h"
 
 #pragma region ADD
