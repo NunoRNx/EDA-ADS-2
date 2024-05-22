@@ -53,7 +53,7 @@ typedef struct stacks {
  */
 
 void printGraph(graph *ini);
-vertice* addVertice(graph* ini, int id, bool *b);
+vertice* addVertice(graph* ini, int id);
 bool addAdj(graph* ini, int oriID, int destID, int custo);
 bool removeAdj(graph* ini, int oriID, int destID);
 graph* removeVert(graph* graph, int id, int* e);

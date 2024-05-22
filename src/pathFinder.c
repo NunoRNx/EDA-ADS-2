@@ -98,7 +98,7 @@ void printPath(int stack[], int i){
 #pragma region DFS stack Dinamico
 
 /**
- * @brief 
+ * @brief Verificação & Preparação para DFT/DFS
  * 
  * @param gini Inicio do grafo
  * @param oriID ID origem
@@ -134,10 +134,10 @@ int DFS(graph* gini, int oriID, int destID, bool cost) {
 }
 
 /**
- * @brief 
+ * @brief Algoritmo DFT/DFS
  * 
  * @param gini Inicio do grafo
- * @param vert vertice origem
+ * @param vert vértice origem
  * @param destID ID destino
  * @param custo inteiro que guardar o valor de um caminho até ao ponto atual
  * @param stack lista que guarda o caminho
@@ -172,83 +172,6 @@ int DFSrecursive(graph* gini, vertice* vert, int destID, int custo, stacks* stac
     }
     stack = pop(stack);
     return *maior;
-}
-bool checkStack(int v, stacks* stack) {
-    stacks* aux = stack;
-    while (aux != NULL) {
-        if (aux->id == v) {
-            return false;
-        }
-        aux = aux->next;
-    }
-    return true;
-}
-
-void printPath(stacks* stack) {
-    if (stack == NULL) {
-        return;
-    }
-    printPath(stack->next);
-    if (stack->next != NULL) {
-        printf("->%d", stack->id);
-    } else {
-        printf("\n%d", stack->id);
-    }
-}
-
-stacks* push(stacks* stack, int id) {
-    stacks* aux = (stacks*)malloc(sizeof(stacks));
-    if (aux == NULL) {
-        return NULL;
-    }
-    aux->id = id;
-    aux->next = stack;
-    return aux;
-}
-
-stacks* pop(stacks* stack) {
-    if (stack == NULL) {
-        return NULL;
-    }
-    stacks* temp = stack;
-    stack = stack->next;
-    free(temp);
-    return stack;
-}
-
-stacks* copyPath(stacks* src) {
-    if (src == NULL) {
-        return NULL;
-    }
-    stacks* copied = NULL;
-    stacks* current = NULL;
-    while (src != NULL) {
-        stacks* new_node = (stacks*)malloc(sizeof(stacks));
-        if (new_node == NULL) {
-            printf("Memory allocation failed\n");
-            exit(1);
-        }
-        new_node->id = src->id;
-        new_node->next = NULL;
-        if (copied == NULL) {
-            copied = new_node;
-            current = copied;
-        } else {
-            current->next = new_node;
-            current = current->next;
-        }
-        src = src->next;
-    }
-    return copied;
-}
-
-void clearPath(stacks* stack) {
-    stacks* aux = stack;
-    while (aux != NULL) {
-        stacks* temp = aux;
-        aux = aux->next;
-        free(temp);
-    }
 }
 
 #pragma endregion

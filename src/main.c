@@ -2,10 +2,10 @@
 
 int main(){
     const char* filename="nums.txt";
-    bool *r;
     graph* ini=criaGrafo(filename);
+    bool *r;
     printf("\nAdd vertice to graph\n");
-    addVertice(ini,ini->nVert,&r);
+    addVertice(ini,ini->nVert);
     printf("\nAdd destination to a vertice\n");
     addAdj(ini,3,40,23);
     addAdj(ini,40,6,47);
@@ -13,6 +13,10 @@ int main(){
     //DFS(ini, ini->inicio,6,0,stack,highPath,0,false,&maior,&sizeHighPath);
     DFS(ini,1,5,false);
     int custo=DFS(ini,1,5,true);
+    printf("\nCaminho de maior custo entre 1 e 5: %d\n",custo);
+    removeVert(ini,5,&r);
+    printf("tester");
+    custo=DFS(ini,1,5,true);
     printf("\nCaminho de maior custo entre 1 e 5: %d\n",custo);
     //printPath(highPath,sizeHighPath);
     //printf("\nCusto: %d",*maior);

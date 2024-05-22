@@ -15,7 +15,6 @@
 
 graph* criaGrafo(const char* filename){
     int i=0;
-    bool *b;
     adj* adj=NULL;
     vertice* v=NULL;
     FILE* file=fopen(filename,"r");
@@ -28,7 +27,7 @@ graph* criaGrafo(const char* filename){
     {
         adj=readAllAdj(file);
         if(adj!=NULL){
-            v=addVertice(grafo,grafo->nVert,&b);
+            v=addVertice(grafo,grafo->nVert);
             if(v!=NULL){
                 v->ini=adj;
                 if(i==0){
