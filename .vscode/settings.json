@@ -4,6 +4,7 @@
         "stdio.h": "c",
         "stdbool.h": "c",
         "header.h": "c",
-        "malloc.h": "c"
+        "malloc.h": "c",
+        "dirent.h": "c"
     }
 }
