@@ -27,7 +27,7 @@ graph* criaGrafo(const char* filename){
     {
         adj=readAllAdj(file);
         if(adj!=NULL){
-            v=addVertice(grafo,grafo->nVert);
+            v=addvertice(grafo,grafo->nVert);
             if(v!=NULL){
                 v->ini=adj;
                 if(i==0){
@@ -72,54 +72,98 @@ adj* readAllAdj(FILE* file){
 
 #pragma region Export (bin)
 
-/* int saveGraphToBin(graph *ini,const char *filename){
-    vertice *aux=ini->inicio;
-    FILE* file=fopen(filename,"wb");
-    if (file==NULL)return 1;    
-    /* while (aux!=NULL)
-    {
-        fwrite(aux,sizeof(vertice),1,file);
-        aux=aux->proxv;
-    }
-    fwrite(aux,sizeof(vertice),1,file);
-    aux=aux->proxv;
-    fwrite(aux->ini,sizeof(adj),1,file);
-    aux=aux->proxv;
-    fclose(file);
-    return 0;
-} */
+int SaveGraph(graph* ini, char* filename) {
+
+	if (ini==NULL || ini->inicio==NULL) return -1;
+	FILE* file = fopen(filename, "wb");
+	if (file == NULL) return -2;
+
+	vertice* vert = ini->inicio;
+    verticeBin auxfile;	//estrutura de vertice para gravar em ficheiro
+	while (vert != NULL) {
+		auxfile.id = vert->id;
+		fwrite(&auxfile, 1, sizeof(verticeBin), file);
+		//Pode gravar de imediato as adjacencias!
+		if (vert->ini) {
+            int size=snprintf(NULL, 0, "%d.bin", vert->id)+1;
+            char* adjfile=(char*)malloc(size);
+            if(!adjfile)perror("Erro");return -3;
+            snprintf(adjfile, size, "%d.bin", vert->id);
+			int r = SaveAdj(vert->ini, adjfile);
+            free(adjfile);
+			if (!r) break;
+		}
+		vert = vert->proxv;
+	}
+	fclose(file);
+	return 1;
+}
+bool SaveAdj(adj* ini, char* filename) {
+	FILE* file=fopen(filename,"wb");
+	if (ini == NULL) return false;
+	adj* aux = ini;
+	adjBin auxFile;
+	while (aux) {
+		auxFile.id = aux->id;
+		auxFile.custo = aux->custo;
+		fwrite(&auxFile, 1, sizeof(adjBin), file);
+		aux = aux->prox;
+	}
+	fclose(file);
+	return true;
+}
 
 #pragma endregion
 
 #pragma region Import (bin)
 
-/* int loadBinGraph(graph *ini,const char *filename){
-    adj* adj=NULL;
-    int i=0;
-    //criar
-    vertice *v=(vertice*)malloc(sizeof(vertice));
-    if (v==NULL)return -1; 
-    FILE* file=fopen(filename,"rb");
-    if (file==NULL)return -2;    
-    graph* grafo=(graph*)malloc(sizeof(graph));
-    if(grafo==NULL)return -3;
-    grafo->nVert=1;
-    grafo->inicio=NULL;
+graph* LoadGraph(char* fileName, bool* res) {
+    graph* ini=criaGrafoIni();
+    if(!ini)return NULL;
+	FILE* file = fopen(fileName, "rb");
+	if (file == NULL) perror("Erro");return NULL;
+    *res = false;
+	verticeBin auxfile;
+	while (fread(&auxfile, 1, sizeof(verticeBin), file)) {
+		addVertice(ini, auxfile.id);
+	}
+	fclose(file);
+	return ini;
+}
 
-    while (!feof(file))
-    {
-        adj=readAllAdjBin(file);
-        if(adj!=NULL){ //erro ao criar adj em ler()
-            fread(v,sizeof(vertice),1,file);
-            v->ini=adj;
-            if(i==0){
-                grafo->inicio=v;
-                i++;
-            }
-        }
-    }
-    fclose(file);
-    return 0;
-} */
+/**
+ * @brief Load de Adjacencias de um Grafo. REVER!!!
+ *
+ * @param g
+ * @param fileName
+ * @param res
+ * @return
+ * @author lufer
+ *
+ */
+vertice* LoadAdj(vertice* g, bool* res) {
+	*res = false;
+	FILE* fp;
+	if (g == NULL) return -1;
+	AdjFile aux;
+	vertice* auxGraph = g;
+	while (auxGraph) {
+		fp = fopen(auxGraph->cidade, "rb");
+		if (fp != NULL) {
+			while (fread(&aux, 1, sizeof(AdjFile), fp)) {
+				g = InsereAdjacenteverticeCod(g, aux.codOrigem, aux.codDestino, aux.weight, res);
+			}
+			fclose(fp);
+		}
+		auxGraph = auxGraph->next;
+	}
+	return g;
+}
+
+graph* criaGrafoIni(){
+    graph* ini=(graph*)malloc(sizeof(graph));
+    if(!ini)perror("Erro");return NULL;
+    return ini;
+}
 
 #pragma endregion

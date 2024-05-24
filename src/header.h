@@ -21,6 +21,7 @@
 #include <malloc.h>
 #include <stdbool.h>
 
+#pragma region struct
 /**
  * @brief 
  * Declaração das estruturas
@@ -45,13 +46,24 @@ typedef struct stacks {
     struct stacks *next;
 }stacks;
 
-#pragma funcoes
+/**
+ * @brief Estruturas para salvar o grafo
+ * 
+ */
+typedef struct adjBin {
+    int id;
+    int custo;
+}adjBin;
+typedef struct verticeBin {
+    int id;
+}verticeBin;
+#pragma endregion
+
+#pragma region funcoes
 
 /**
- * @brief 
- * Declaração de todas as funções
+ * @brief Declaração de todas as funções
  */
-
 void printGraph(graph *ini);
 vertice* addVertice(graph* ini, int id);
 bool addAdj(graph* ini, int oriID, int destID, int custo);
@@ -81,3 +93,4 @@ stacks* push(stacks* stack, int id);
 stacks* pop(stacks* stack);
 stacks* copyPath(stacks* src);
 void clearPath(stacks* stack);
+#pragma endregion
