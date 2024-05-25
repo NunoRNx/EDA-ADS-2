@@ -13,11 +13,11 @@ bool checkStack(int v, stacks* stack) {
     stacks* aux = stack;
     while (aux != NULL) {
         if (aux->id == v) {
-            return false;
+            return true;
         }
         aux = aux->next;
     }
-    return true;
+    return false;
 }
 
 /**

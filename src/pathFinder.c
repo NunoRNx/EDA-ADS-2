@@ -113,7 +113,7 @@ int DFS(graph* gini, int oriID, int destID, bool cost) {
     stacks* highPath = NULL;
     
     if (!existeVert(gini, oriID) || !existeVert(gini, destID)) {
-        return -1;
+        return -2;
     }
 
     vertice* vert = gini->inicio;
@@ -123,13 +123,15 @@ int DFS(graph* gini, int oriID, int destID, bool cost) {
 
     if (cost) {
         DFSrecursive(gini, vert, destID, 0, stack, &highPath, true, &maior);
-        printPath(highPath);
+        if(maior!=0){
+            printf("\n\nCaminho de maior custo entre %d e %d:", oriID, destID);
+            printPath(highPath);
+        }
         clearPath(highPath);
         return maior;
     } else {
         DFSrecursive(gini, vert, destID, 0, stack, &highPath, false, &maior);
-        clearPath(stack);
-        return 0;
+        return -1;
     }
 }
 
@@ -160,7 +162,7 @@ int DFSrecursive(graph* gini, vertice* vert, int destID, int custo, stacks* stac
     } else {
         adj* aux = vert->ini;
         while (aux != NULL) {
-            if (checkStack(aux->id, stack)) {
+            if (!checkStack(aux->id, stack)) {
                 vertice* v = gini->inicio;
                 while (v->id != aux->id) {
                     v = v->proxv;

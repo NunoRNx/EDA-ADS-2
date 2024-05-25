@@ -45,7 +45,7 @@ graph* criaGrafo(const char* filename){
 adj* readAllAdj(FILE* file){
     int num=0;
     char c;
-    int i=1, verf=0;
+    int i=1;
     adj* aux=NULL;
     adj* ant=NULL;
     adj* ini=NULL;
@@ -88,7 +88,7 @@ int SaveGraph(graph* ini){
             char* adjfile=(char*)malloc(size);
             if(!adjfile)return -3;
             snprintf(adjfile, size, "%d.bin", vert->id);
-			int r = SaveAdj(vert->ini, adjfile);
+			bool r = SaveAdj(vert->ini, adjfile);
             free(adjfile);
 			if (!r) break;
 		}
@@ -99,7 +99,7 @@ int SaveGraph(graph* ini){
 }
 bool SaveAdj(adj* ini, char* filename){
 	FILE* file=fopen(filename,"wb");
-	if (ini == NULL) return false;
+	if (file == NULL) return false;
 	adj* aux = ini;
 	adjBin auxFile;
 	while (aux) {

@@ -128,7 +128,7 @@ graph* removeVert(graph* graph, int id, int* e){
     vertice* ant=NULL;
     if (graph == NULL || graph->inicio == NULL){
         *e = -1;
-        return NULL;
+        return graph;
     }
     if(vert->id!=id){
         while (vert->id!=id)
@@ -216,7 +216,7 @@ bool verticeCheck(graph* ini){
  * @return false, vértice não existe
  */
 bool existeVert(graph* ini, int id){
-    if(ini->inicio==NULL)return false;
+    if(ini->inicio==NULL || ini==NULL)return false;
     vertice* vert=ini->inicio;
     while(vert!=NULL){
         if(vert->id==id)return true;

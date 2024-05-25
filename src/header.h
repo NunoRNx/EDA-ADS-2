@@ -47,7 +47,7 @@ typedef struct stacks {
 }stacks;
 
 /**
- * @brief Estruturas para salvar o grafo
+ * @brief Estruturas para exportar e importar o grafo
  * 
  */
 typedef struct adjBin {

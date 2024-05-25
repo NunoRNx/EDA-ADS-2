@@ -13,10 +13,10 @@ int main(){
     addAdj(ini,40,6,47);
     printGraph(ini);
 
-   /*  DFS(ini,1,5,false);
+   DFS(ini,1,5,false);
     int custo=DFS(ini,1,5,true);
-    printf("\nCaminho de maior custo entre 1 e 5: %d\n",custo);
-    removeVert(ini,5,&r);
+    printf("\nCusto: %d\n",custo);
+    /*  removeVert(ini,5,&r);
     custo=DFS(ini,1,5,true);
     printf("\nCaminho de maior custo entre 1 e 5: %d\n",custo); */
 
