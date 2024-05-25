@@ -75,8 +75,12 @@ adj* adjMalloc(int custo, int id);
 bool delAllAdj(adj* ini);
 bool verticeCheck(graph* ini);
 bool existeVert(graph* ini, int id);
-//int saveGraphToBin(graph *ini,const char *filename);
-//int loadBinGraph(graph *ini,const char *filename);
+
+//Export/Import
+int SaveGraph(graph* ini);
+bool SaveAdj(adj* ini, char* filename);
+graph* LoadGraph();
+adj* LoadAdj(char* filename);
 
 /*DFS com stack estático
 int DFS(graph* gini, int oriID, int destID, bool cost);
